@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>infist 线上面试</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Montserrat', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            min-height: 100vh;
+        }
+
+        #app {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.5s;
+        }
+
+        .step-card {
+            background: rgba(255, 255, 255, 0.97);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            border-radius: 24px;
+            padding: 40px 32px;
+            min-width: 320px;
+            max-width: 95vw;
+            width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeInUp 0.7s cubic-bezier(.23, 1.01, .32, 1) both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;            
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            background: #fff;
+            object-fit: contain;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .welcome-text {
+            font-size: 1.35rem;
+            color: #2d3748;
+            text-align: center;
+            margin-bottom: 0;
+            letter-spacing: 1px;
+            font-weight: 600;
+            line-height: 1.5;
+            padding: 0 16px;
+        }
+
+        .markdown-body {
+            width: 100%;
+            color: #374151;
+            font-size: 1.08rem;
+            line-height: 1.8;
+            margin-bottom: 32px;
+            background: none;
+            padding: 0;
+        }
+
+        .markdown-body img {
+            width: 150px;
+            height: 150px;
+            border-radius: 12px;
+            margin: 16px auto;
+            display: block;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            background: #fff;
+            object-fit: contain;
+        }
+
+        .markdown-body h1,
+        .markdown-body h2,
+        .markdown-body h3 {
+            color: #6366f1;
+            margin: 0.5em 0 0.3em 0;
+        }
+
+        .markdown-body ul {
+            padding-left: 1.2em;
+            margin: 0.5em 0;
+        }
+
+        .markdown-body code {
+            background: #f3f4f6;
+            color: #d97706;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 0.98em;
+        }
+
+        .markdown-body blockquote {
+            border-left: 4px solid #6366f1;
+            background: #f1f5ff;
+            color: #6366f1;
+            margin: 1em 0;
+            padding: 0.7em 1em;
+            border-radius: 6px;
+        }
+
+        .form-group {
+            width: 100%;
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0 8px;
+            box-sizing: border-box;
+        }
+
+        .form-group label {
+            font-size: 0.98rem;
+            color: #6366f1;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #c7d2fe;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.2s;
+            background: #f1f5ff;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            border-color: #6366f1;
+            background: #fff;
+        }
+
+        .btn {
+            width: calc(100% - 16px);
+            margin: 8px 8px 0 8px;
+            padding: 12px 0;
+            background: linear-gradient(90deg, #6366f1 0%, #818cf8 100%);
+            color: #fff;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08);
+            transition: background 0.2s, transform 0.1s;
+            box-sizing: border-box;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .success {
+            color: #22c55e;
+            font-size: 1.2rem;
+            margin-top: 18px;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .step-card {
+                padding: 32px 16px;
+                min-width: 0;
+                width: 98vw;
+            }
+
+            .logo {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        const { createApp, ref, reactive, onMounted } = Vue;
+
+        // 你的面试引导 markdown 文案
+        const guideMarkdown = `
+# HireWithCode - 面试者挑战项目
+
+欢迎来到 \`HireWithCode\` 项目！这是一个专为技术面试者设计的真实项目挑战。目前，这个仓库刚刚起步，没有任何代码——只有待实现的功能（TODOs）。你的任务是将这些TODOs转变为实际的代码，提交你的Pull Request（PR）就是你面试的一部分挑战。
+
+## 产品功能 TODOs
+产品是一个 Web 网站（PC端、移动端兼容），分为 4 个步骤的页面：
+- [ ] **欢迎语**：Logo + 一句话欢迎语（垂直水平居中，2 秒后自动进入下一页 *面试引导*）\`欢迎来到 infist 线上面试环节，期待你的加入！\` ![logo](./logo.png) 
+- [ ] **面试引导**：介绍面试的流程和说明（Markdown 文案展示，需要渲染为富文本样式）[页面文案 markdown](https://raw.githubusercontent.com/InfiniteStatesInc/HireWithCode/refs/heads/main/README.md)
+- [ ] **接受挑战**：表单，\`input\`(用户输入自己的 github id) 、\`input\`(邮箱)、\`submit button\`(接受挑战)
+- [ ] **完成挑战**：表单，\`input\`(github 仓库 url)、\`input\`([Vercel](https://vercel.app/) 在线体验地址)、\`submit button\`(提交作品)
+
+## 如何参与？
+
+1. 克隆仓库到你的本地机器。
+2. 按照你对这个产品的理解，自行开发 TODO
+4. 确保你的代码是可以运行的
+5. 完成挑战后，通过Pull Request将你的代码提交给我们。
+6. 在PR中附上你的Vercel在线体验链接。
+
+> 备注说明：
+> 这个项目的步骤 3、4 是是需要服务端能力的（API + 数据库），如果你不具备全栈的经验，可以考虑使用 [supabase](https://supabase.com/) 作为本项目的服务端（或者仅仅实现前端静态网页）
+
+我们会审查每一个PR，并以此作为面试的一部分。我们期待看到你的创意和技术实力！
+
+祝你好运！
+`;
+
+        createApp({
+            setup() {
+                const step = ref(0);
+
+                // 表单数据
+                const acceptForm = reactive({
+                    github: '',
+                    email: ''
+                });
+                const finishForm = reactive({
+                    repo: '',
+                    vercel: ''
+                });
+
+                // 校验与反馈
+                const acceptError = ref('');
+                const finishError = ref('');
+                const finishSuccess = ref(false);
+
+                // 自动进入下一步
+                onMounted(() => {
+                    if (step.value === 0) {
+                        setTimeout(() => step.value = 1, 2000);
+                    }
+                });
+
+                // 进入下一步
+                const nextStep = () => {
+                    step.value++;
+                };
+
+                // markdown渲染
+                const renderMarkdown = (md) => {
+                    return marked.parse(md);
+                };
+
+                // 接受挑战表单提交
+                const submitAccept = () => {
+                    acceptError.value = '';
+                    if (!acceptForm.github.trim() || !acceptForm.email.trim()) {
+                        acceptError.value = '请填写所有信息';
+                        return;
+                    }
+                    // 简单邮箱校验
+                    if (!/^[\w\-\.]+@[\w\-]+\.[\w\-]+$/.test(acceptForm.email)) {
+                        acceptError.value = '邮箱格式不正确';
+                        return;
+                    }
+                    nextStep();
+                };
+
+                // 完成挑战表单提交
+                const submitFinish = () => {
+                    finishError.value = '';
+                    finishSuccess.value = false;
+                    if (!finishForm.repo.trim() || !finishForm.vercel.trim()) {
+                        finishError.value = '请填写所有信息';
+                        return;
+                    }
+                    // 简单URL校验
+                    if (!/^https?:\/\/.+/.test(finishForm.repo) || !/^https?:\/\/.+/.test(finishForm.vercel)) {
+                        finishError.value = '请输入正确的网址';
+                        return;
+                    }
+                    finishSuccess.value = true;
+                };
+
+                return {
+                    step,
+                    acceptForm,
+                    finishForm,
+                    acceptError,
+                    finishError,
+                    finishSuccess,
+                    nextStep,
+                    renderMarkdown,
+                    submitAccept,
+                    submitFinish,
+                    guideMarkdown
+                };
+            },
+            template: `
+        <div class="step-card" v-if="step === 0">
+          <div class="logo-container">
+            <img class="logo" src="./logo.png" alt="logo" />
+            <div class="welcome-text">欢迎来到 infist 线上面试环节，期待你的加入！</div>
+          </div>
+        </div>
+        <div class="step-card" v-else-if="step === 1">
+          <div class="logo-container">
+            <img class="logo" src="./logo.png" alt="logo" />
+          </div>
+          <div class="markdown-body" v-html="renderMarkdown(guideMarkdown)"></div>
+          <button class="btn" @click="nextStep">下一步</button>
+        </div>
+        <div class="step-card" v-else-if="step === 2">
+          <div class="logo-container">
+            <img class="logo" src="./logo.png" alt="logo" />
+          </div>
+          <form @submit.prevent="submitAccept" style="width:100%">
+            <div class="form-group">
+              <label for="github">GitHub ID</label>
+              <input id="github" v-model="acceptForm.github" autocomplete="off" placeholder="请输入你的 GitHub 用户名" />
+            </div>
+            <div class="form-group">
+              <label for="email">邮箱</label>
+              <input id="email" v-model="acceptForm.email" type="email" autocomplete="off" placeholder="请输入你的邮箱" />
+            </div>
+            <button class="btn" type="submit">接受挑战</button>
+            <div v-if="acceptError" style="color:#ef4444;margin-top:10px;text-align:center;">{{acceptError}}</div>
+          </form>
+        </div>
+        <div class="step-card" v-else-if="step === 3">
+          <div class="logo-container">
+            <img class="logo" src="./logo.png" alt="logo" />
+          </div>
+          <form @submit.prevent="submitFinish" style="width:100%">
+            <div class="form-group">
+              <label for="repo">GitHub 仓库 URL</label>
+              <input id="repo" v-model="finishForm.repo" type="url" autocomplete="off" placeholder="https://github.com/your/repo" />
+            </div>
+            <div class="form-group">
+              <label for="vercel">Vercel 在线体验地址</label>
+              <input id="vercel" v-model="finishForm.vercel" type="url" autocomplete="off" placeholder="https://your-project.vercel.app" />
+            </div>
+            <button class="btn" type="submit">提交作品</button>
+            <div v-if="finishError" style="color:#ef4444;margin-top:10px;text-align:center;">{{finishError}}</div>
+            <div v-if="finishSuccess" class="success">🎉 作品已提交，感谢你的参与！</div>
+          </form>
+        </div>
+      `
+        }).mount('#app');
+    </script>
+</body>
+
+</html>
