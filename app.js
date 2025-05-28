@@ -3,7 +3,7 @@ const { createApp, ref, reactive, onMounted } = Vue;
 // 获取 markdown 内容
 async function fetchGuideMarkdown() {
     try {
-        const response = await fetch('guide.md');
+        const response = await fetch('/guide.md');
         return await response.text();
     } catch (error) {
         console.error('Error loading guide markdown:', error);
@@ -97,20 +97,20 @@ createApp({
     template: `
         <div class="step-card" v-if="step === 0">
           <div class="logo-container">
-            <img class="logo" src="./logo.png" alt="logo" />
+            <img class="logo" src="/logo.png" alt="logo" />
             <div class="welcome-text">欢迎来到 infist 线上面试环节，期待你的加入！</div>
           </div>
         </div>
         <div class="step-card" v-else-if="step === 1">
           <div class="logo-container">
-            <img class="logo" src="./logo.png" alt="logo" />
+            <img class="logo" src="/logo.png" alt="logo" />
           </div>
           <div class="markdown-body" v-html="renderMarkdown(guideMarkdown)"></div>
           <button class="btn" @click="nextStep">下一步</button>
         </div>
         <div class="step-card" v-else-if="step === 2">
           <div class="logo-container">
-            <img class="logo" src="./logo.png" alt="logo" />
+            <img class="logo" src="/logo.png" alt="logo" />
           </div>
           <form @submit.prevent="submitAccept" style="width:100%">
             <div class="form-group">
@@ -127,7 +127,7 @@ createApp({
         </div>
         <div class="step-card" v-else-if="step === 3">
           <div class="logo-container">
-            <img class="logo" src="./logo.png" alt="logo" />
+            <img class="logo" src="/logo.png" alt="logo" />
           </div>
           <form @submit.prevent="submitFinish" style="width:100%">
             <div class="form-group">

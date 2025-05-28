@@ -2,6 +2,7 @@
   "name": "hire-with-code",
   "version": "1.0.0",
   "description": "HireWithCode interview challenge",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
